@@ -84,7 +84,7 @@ function onSubmit(event) {
             /* options */
           });
           lightbox.refresh();
-        }
+        };
       })
       .catch(() => {
         console.log('Mistake from server');
@@ -93,5 +93,5 @@ function onSubmit(event) {
     setTimeout(() => {
       document.querySelector('.loader').remove();
     }, 1000);
-  }
-}
+  };
+};
