@@ -10,28 +10,28 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import svgError from '/img/bi_x-octagon.svg';
 
-// const BASE_URL = 'https://pixabay.com';
-// const END_POINT = '/api/';
-// const API_KEY = '42307570-a64cb029cc8427df0f0b3ddcd';
+import internetServerInfo from './js/pixabay-api';
+
+import renderHtml from './js/render-functions';
 
 const formSubmit = document.querySelector('.form');
 formSubmit.addEventListener('submit', onSubmit);
 
 function onSubmit(event) {
   event.preventDefault();
-
-  document
-    .querySelector('.gallery')
-    .insertAdjacentHTML('beforebegin', `<span class="loader"></span>`);
-
+  document.querySelector('.gallery').innerHTML = '';
   const searchText = event.target.elements.searchInput.value;
-
   formSubmit.reset();
 
   if (searchText) {
-    const url = `https://pixabay.com/api/?key=42307570-a64cb029cc8427df0f0b3ddcd&q=${searchText}&image_type=photo&orientation=horizontal&safesearch=true`;
+    document
+      .querySelector('.gallery')
+      .insertAdjacentHTML('beforebegin', `<span class="loader"></span>`);
 
-    document.querySelector('.gallery').innerHTML = '';
+    const { BASE_URL, END_POINT, API_KEY, constParameters } =
+      internetServerInfo;
+    const url = `${BASE_URL}${END_POINT}?key=${API_KEY}&q=${searchText}${constParameters}`;
+
     fetch(url)
       .then(response => response.json())
       .then(array => {
@@ -75,7 +75,8 @@ function onSubmit(event) {
 </li>`;
             })
             .join('');
-          document.querySelector('.gallery').innerHTML = markup;
+
+          renderHtml(markup);
 
           var lightbox = new SimpleLightbox('.gallery a', {
             captionPosition: 'bottom',
@@ -84,7 +85,7 @@ function onSubmit(event) {
             /* options */
           });
           lightbox.refresh();
-        };
+        }
       })
       .catch(() => {
         console.log('Mistake from server');
@@ -93,5 +94,5 @@ function onSubmit(event) {
     setTimeout(() => {
       document.querySelector('.loader').remove();
     }, 1000);
-  };
-};
+  }
+}
