@@ -12,21 +12,19 @@ import svgError from '/img/bi_x-octagon.svg';
 
 import internetServerInfo from './js/pixabay-api';
 
-import renderHtml from './js/render-functions';
+import renderFunctions from './js/render-functions';
 
 const formSubmit = document.querySelector('.form');
 formSubmit.addEventListener('submit', onSubmit);
 
 function onSubmit(event) {
   event.preventDefault();
-  document.querySelector('.gallery').innerHTML = '';
+  renderFunctions.removeMarkup();
   const searchText = event.target.elements.searchInput.value;
   formSubmit.reset();
 
   if (searchText) {
-    document
-      .querySelector('.gallery')
-      .insertAdjacentHTML('beforebegin', `<span class="loader"></span>`);
+    renderFunctions.setLoader();
 
     const { BASE_URL, END_POINT, API_KEY, constParameters } =
       internetServerInfo;
@@ -76,7 +74,7 @@ function onSubmit(event) {
             })
             .join('');
 
-          renderHtml(markup);
+          renderFunctions.renderMarkup(markup);
 
           var lightbox = new SimpleLightbox('.gallery a', {
             captionPosition: 'bottom',
@@ -92,7 +90,7 @@ function onSubmit(event) {
       });
 
     setTimeout(() => {
-      document.querySelector('.loader').remove();
+      renderFunctions.removeLoader();
     }, 1000);
   }
 }
